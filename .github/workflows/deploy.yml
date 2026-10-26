@@ -1,0 +1,66 @@
+name: 🚀 CI/CD Website Pipeline (Stage & Prod)
+
+on:
+  push:
+    branches:
+      - main  # Runs the pipeline when code is pushed or merged into main
+
+jobs:
+  # 1. RUN UNIT TESTS
+  test:
+    name: 🧪 Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Set up Environment
+        run: echo "Setting up runtime environment (e.g., Node, Python, PHP)..."
+
+      - name: 🏃‍♂️ Execute Tests
+        run: |
+          echo "Running your unit test framework here..."
+          # Replace this line with your actual test command (e.g., npm test, pytest, phpunit)
+          exit 0 
+
+  # 2. AUTOMATIC DEPLOY TO STAGE
+  deploy-stage:
+    name: 📂 Deploy to STAGE
+    needs: test  # Only runs if the test job passes successfully
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📡 Sync to STAGE Subdirectory
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ftp.cluster121.hosting.ovh.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: /home/tansovo/www/stage/  # Points directly to STAGE folder
+
+  # 3. MANUAL APPROVAL & DEPLOY TO PROD
+  deploy-prod:
+    name: 🎉 Deploy to PROD
+    needs: deploy-stage  # Only triggers after STAGE deployment finishes
+    runs-on: ubuntu-latest
+    environment: PROD    # ⚠️ This triggers the human-in-the-loop manual approval prompt!
+    
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📡 Sync to PROD Root
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ftp.cluster121.hosting.ovh.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: /home/tansovo/www/   # Points directly to PROD Root
