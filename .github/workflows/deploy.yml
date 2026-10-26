@@ -40,7 +40,7 @@ jobs:
           server: ftp.cluster121.hosting.ovh.net
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftp
           server-dir: /home/tansovo/www/stage/  # Points directly to STAGE folder
 
   # 3. MANUAL APPROVAL & DEPLOY TO PROD
@@ -62,5 +62,5 @@ jobs:
           server: ftp.cluster121.hosting.ovh.net
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftp
           server-dir: /home/tansovo/www/   # Points directly to PROD Root
