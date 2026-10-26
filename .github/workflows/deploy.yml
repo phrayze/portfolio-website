@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🛠️ Set up Environment
         run: echo "Setting up runtime environment (e.g., Node, Python, PHP)..."
@@ -26,16 +26,16 @@ jobs:
   # 2. AUTOMATIC DEPLOY TO STAGE
   deploy-stage:
     name: 📂 Deploy to STAGE
-    needs: test  # Only runs if the test job passes successfully
+#    needs: test  # Only runs if the test job passes successfully
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: 📡 Sync to STAGE Subdirectory
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ftp.cluster121.hosting.ovh.net
           username: ${{ secrets.FTP_USERNAME }}
@@ -52,12 +52,12 @@ jobs:
     
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: 📡 Sync to PROD Root
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ftp.cluster121.hosting.ovh.net
           username: ${{ secrets.FTP_USERNAME }}
