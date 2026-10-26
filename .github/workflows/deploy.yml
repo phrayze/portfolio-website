@@ -7,6 +7,7 @@ on:
 
 jobs:
   # 1. RUN UNIT TESTS
+         
   test:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
@@ -15,12 +16,15 @@ jobs:
         uses: actions/checkout@v7
 
       - name: 🛠️ Set up Environment
-        run: echo "Setting up runtime environment (e.g., Node, Python, PHP)..."
+        run: echo "Setting up runtime environment (Python)..."
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: 🏃‍♂️ Execute Tests
         run: |
-          echo "Running your unit test framework here..."
-          # Replace this line with your actual test command (e.g., npm test, pytest, phpunit)
+          echo "Running HTML and Asset unit test framework here..."
+          python -m unittest discover -s tests -v
           exit 0 
 
   # 2. AUTOMATIC DEPLOY TO STAGE
@@ -41,7 +45,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
-          server-dir: /home/tansovo/www/stage/  # Points directly to STAGE folder
+          server-dir: /www/stage/  # Points directly to STAGE folder
 
   # 3. MANUAL APPROVAL & DEPLOY TO PROD
   deploy-prod:
@@ -63,4 +67,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
-          server-dir: /home/tansovo/www/   # Points directly to PROD Root
+          server-dir: /www/   # Points directly to PROD Root
